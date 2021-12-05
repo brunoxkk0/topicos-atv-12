@@ -3,11 +3,10 @@ const express = require('express');
 
 const app = express();
 
-app.get('/', (req, res) => {
-    console.log('some request');
+async function readFile(res){
 
-    // leitura async libera o event loop para processar outras requisicoes
-    fs.readFile('./html/basic.html', 'utf-8', (err, data) => {
+    await fs.readFile('./html/basic.html', 'utf-8', (err, data) => {
+
         if (err) {
             res.send(err);
             return;
@@ -15,7 +14,11 @@ app.get('/', (req, res) => {
 
         res.send(data);
     });
+}
 
+app.get('/', (req, res) => {
+    console.log('some request');
+    readFile(res);
 });
 
 app.listen(3000, () => {
